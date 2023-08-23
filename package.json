@@ -1,0 +1,12 @@
+{
+  "name": "fourth-try",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ProductManager.js",
+  "scripts": {
+    "test": "node D1/ProductManager.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
