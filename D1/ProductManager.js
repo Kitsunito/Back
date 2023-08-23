@@ -28,26 +28,44 @@ class ProductManager {
 			stock
 		);
 
-		if (this.products.length) {
+		if (!this.products.length) {
 			product.id = 1;
 			this.products = [product];
 		} else {
-      this.products.map((x) => {
-        if (x.code === product.code)
-          return {
-            message: "Error: el código de producto ya se encuentra ingresado",
-          };
-      });
+			//Buscamos el índice de algún objeto con el mismo código
+			// para identificar si el mismo ya existe
+			const index = this.products.findIndex((x) => x.code === product.code);
+
+			if (index !== -1) {
+				return {
+					status: 400,
+					message: "Error: el código de producto ya se encuentra ingresado",
+				};
+			}
+
+			// Asignamos un ID igual a la cantidad de elementos ya existentes +1
 			product.id = this.products.length++;
+			// Incorporamos el producto en el array
 			this.products = [...this.products, product];
 		}
-
 		return { status: 200, message: `Producto agregado con id ${product.id}` };
 	}
 
 	//Devuelve el listado de todos los productos
 	getProducts() {
 		return this.products;
+	}
+
+	//Devuelve un producto según su ID
+	getProductById(id) {
+		let index = this.products.findIndex((x) => x.id === id);
+
+		if (index !== -1) return this.products[index];
+		else {
+			const response = { status: 404, message: "NOT FOUND" };
+			console.log(response.message);
+			return response;
+		}
 	}
 }
 
@@ -56,7 +74,10 @@ class ProductManager {
 //--------------------------
 let productManager = new ProductManager();
 
+//Validamos que el listado esté vacío
 console.log(productManager.getProducts());
+
+//Añadimos un producto
 console.log(
 	productManager.addProduct(
 		"producto prueba",
@@ -67,7 +88,11 @@ console.log(
 		25
 	)
 );
+
+//Validamos el listado de productos
 console.log(productManager.getProducts());
+
+//Intentamos añadir de nuevo el mismo producto
 console.log(
 	productManager.addProduct(
 		"producto prueba",
@@ -78,4 +103,9 @@ console.log(
 		25
 	)
 );
-console.log(productManager.getProducts());
+
+//Buscamos el elemento con ID 1
+console.log(productManager.getProductById(1));
+
+//Buscamos un elemento con ID 100
+console.log(productManager.getProductById(100));
